@@ -1,0 +1,5 @@
+.venv/
+__pycache__/
+.DS_Store
+# Opcional: si quieres que la nube genere sus propios datos iniciales
+# data/market_data.csv
