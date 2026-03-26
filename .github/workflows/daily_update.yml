@@ -1,0 +1,37 @@
+name: Actualizacion Diaria de Datos
+
+on:
+  schedule:
+    # Corre a las 05:00 UTC (Media noche en México aprox)
+    - cron: '0 5 * * *'
+  # Este botón nos permite probarlo manualmente desde la web de GitHub
+  workflow_dispatch: 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout del codigo
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: |
+          pip install pandas yfinance requests
+
+      - name: Ejecutar script de descarga
+        run: |
+          python update_data.py
+
+      - name: Guardar cambios en GitHub
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add data/market_data.csv
+          git commit -m "Auto-update: Datos de mercado actualizados" || echo "Sin cambios que subir"
+          git push
